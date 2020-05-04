@@ -10,13 +10,16 @@ block layout-content
 			tr
 				- for (var x = 1; x < 10; x++)
 					if (y < 4)
-						td.box.whitepiece(data-x=x, data-y = y, cellpadding='0px')
+						td.cell
+							div.box.draggable.whitepiece(data-x=x, data-y = y, cellpadding='0px', cellspacing='0px')
 							span.coor (#{x},#{y})
 					else if (y > 5)
-						td.box.blackpiece(data-x=x, data-y = y, cellpadding='0px')
+						td.cell
+							div.box.draggable.blackpiece(data-x=x, data-y = y, cellpadding='0px', cellspacing='0px')
 							span.coor (#{x},#{y})
 					else
-						td.box(data-x=x, data-y = y, cellpadding='0px')
+						td.cell
+							div.box(data-x=x, data-y = y, cellpadding='0px', cellspacing='0px')
 							span.coor (#{x},#{y})
 	div.player#white
 		span WHITE

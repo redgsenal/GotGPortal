@@ -8,9 +8,13 @@ html
 		meta(name="theme-color", content="#000000")
 		title #{title}
 		link(rel="stylesheet" href="css/style.css")
+		link(rel="stylesheet" href="css/jquery-ui.min.css")
+		link(rel="stylesheet" href="css/jquery-ui.structure.min.css")
+		link(rel="stylesheet" href="css/jquery-ui.theme.min.css")
 	body
-		div#root
+		div.game
 			block layout-content
 		script(src='/js/jquery.js')
+		script(src='/js/jquery-ui.min.js')
 		script(src='http://localhost:3000/socket.io/socket.io.js')
-		// script(src='/js/script.js')
+		script(src='/js/main.js')
