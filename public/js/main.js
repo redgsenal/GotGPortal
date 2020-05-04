@@ -15,6 +15,17 @@ $(function() {
     	}
     });
 
+    function draggable(piece){
+		$(piece).draggable({
+			addClasses: false,
+			snap: 'td.cell',
+			drag: function(event, ui){
+				var t = $(this);
+				console.log('drag this ', t);
+			}
+		});
+    }
+
     function buildpieces(pieces, color) {
     	console.log(pieces);
     	var board = $('.board');
@@ -28,6 +39,7 @@ $(function() {
     			if (p.length) {
     				p.addClass('draggable');
     				p.addClass(colorside);
+    				draggable(p);
     			}
     		}
     	});
