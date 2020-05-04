@@ -24,8 +24,8 @@ body{
     text-align: center;
     font-size: 10px;
 }
-.box{
-    width: 100%;
+.piece{
+    width: 99%;
     height: 55px;
     top: 0;
     cursor: pointer;
@@ -33,19 +33,19 @@ body{
     background-position: center;
     background-size: cover;
 }
-.box.whitepiece{
+.piece.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }
-.box.whitepiece:hover{
+.piece.whitepiece:hover{
 	background-image: url('../images/whitepiece-select.png');
 }
-.box.blackpiece{
+.piece.blackpiece{
 	background-image: url('../images/blackpiece.png');
 }
-.box.blackpiece:hover{
+.piece.blackpiece:hover{
 	background-image: url('../images/blackpiece-select.png');
 }
-.box:hover {	
+.piece:hover {	
 	background-color: yellow;
 }
 .player{
