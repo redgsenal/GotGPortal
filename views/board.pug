@@ -10,10 +10,10 @@ block layout-content
 			tr
 				- for (var x = 1; x < 10; x++)
 					if (y < 4)
-						td.box#white(data-x=x, data-y = y, cellpadding='0px')
+						td.box.whitepiece(data-x=x, data-y = y, cellpadding='0px')
 							span.coor (#{x},#{y})
 					else if (y > 5)
-						td.box#black(data-x=x, data-y = y, cellpadding='0px')
+						td.box.blackpiece(data-x=x, data-y = y, cellpadding='0px')
 							span.coor (#{x},#{y})
 					else
 						td.box(data-x=x, data-y = y, cellpadding='0px')

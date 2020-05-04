@@ -8,7 +8,7 @@ body{
 	width: 560px;
     height: 493px;
     display: block;
-    background-color: #eaa866;
+    background-color: #ff7f27;
     margin: 0 auto;
     border: 5px solid #9e866d;
     border-spacing: 0;
@@ -25,13 +25,20 @@ body{
     font-size: 10px;
     cursor: pointer;
     background-repeat: no-repeat;
-    
+    background-position: center;
+    background-size: cover;
 }
-.box#white{
+.box.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }
-.box#black{
+.box.whitepiece:hover{
+	background-image: url('../images/whitepiece-select.png');
+}
+.box.blackpiece{
 	background-image: url('../images/blackpiece.png');
+}
+.box.blackpiece:hover{
+	background-image: url('../images/blackpiece-select.png');
 }
 .box:hover {	
 	background-color: yellow;
@@ -43,7 +50,7 @@ body{
 }
 .coor{
 	position: relative;
-    top: 20px;
+    top: 23px;
     display: block;
     height: 12px;
 }
