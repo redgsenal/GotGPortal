@@ -1,0 +1,49 @@
+body{
+	background-color: transparent;
+	padding: 0;
+	margin: 0;
+	width: 100%
+}
+.board{
+	width: 560px;
+    height: 493px;
+    display: block;
+    background-color: #eaa866;
+    margin: 0 auto;
+    border: 5px solid #9e866d;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.box{
+	width: 62px;
+    height: 57px;
+    display: table-cell;
+    border: 3px solid #000000;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+    
+}
+.box#white{
+	background-image: url('../images/whitepiece.png');
+}
+.box#black{
+	background-image: url('../images/blackpiece.png');
+}
+.box:hover {	
+	background-color: yellow;
+}
+.player{
+	width: 100%;
+	text-align: center;
+	padding: 10px 0;
+}
+.coor{
+	position: relative;
+    top: 20px;
+    display: block;
+    height: 12px;
+}

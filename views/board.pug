@@ -1,0 +1,22 @@
+
+extends layout
+
+block layout-content
+	h1 Game of the Generals
+	div.player#black
+		span BLACK
+	table.board
+		- for (var y = 8; y > 0; y--)			
+			tr
+				- for (var x = 1; x < 10; x++)
+					if (y < 4)
+						td.box#white(data-x=x, data-y = y, cellpadding='0px')
+							span.coor (#{x},#{y})
+					else if (y > 5)
+						td.box#black(data-x=x, data-y = y, cellpadding='0px')
+							span.coor (#{x},#{y})
+					else
+						td.box(data-x=x, data-y = y, cellpadding='0px')
+							span.coor (#{x},#{y})
+	div.player#white
+		span WHITE
