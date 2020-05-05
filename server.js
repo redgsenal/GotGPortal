@@ -24,6 +24,10 @@ app.get('/board', (req, res) => {
   res.render("board", { title: "Game of the Generals" });
 });
 
+app.get('/demo', (req, res) => {
+  res.render("demo", { title: "Game of the Generals" });
+});
+
 app.listen(port, () => {
   console.log('listening on *:' + port);
 });

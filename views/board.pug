@@ -11,7 +11,7 @@ block layout-content
 			tr
 			- for (var x = 1; x < 10; x++)
 				td.cell.droppable(data-location = x + '-' + y, cellpadding='0px', cellspacing='0px')
-					div.piece
+					div.box(id='cell-' + x + '-' + y)
 					span.coor (#{x},#{y})
 	div.player#white
 		span WHITE

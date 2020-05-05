@@ -7,14 +7,17 @@ html
 		meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
 		meta(name="theme-color", content="#000000")
 		title #{title}
+		link(rel="stylesheet" href="css/plugins/jquery-ui.min.css")
+		link(rel="stylesheet" href="css/plugins/jquery-ui.structure.min.css")
+		link(rel="stylesheet" href="css/plugins/jquery-ui.theme.min.css")
+		link(rel="stylesheet" href="css/plugins/dragula.min.css")
 		link(rel="stylesheet" href="css/style.css")
-		link(rel="stylesheet" href="css/jquery-ui.min.css")
-		link(rel="stylesheet" href="css/jquery-ui.structure.min.css")
-		link(rel="stylesheet" href="css/jquery-ui.theme.min.css")
 	body
 		div.game
 			block layout-content
-		script(src='/js/jquery.js')
-		script(src='/js/jquery-ui.min.js')
+		script(src='/js/plugins/jquery.min.js')
+		script(src='/js/plugins/jquery-ui.min.js')
+		script(src='/js/plugins/dragula.min.js')
 		script(src='http://localhost:3000/socket.io/socket.io.js')
+		script(src='/js/board.js')
 		script(src='/js/main.js')
