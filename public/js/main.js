@@ -1,3 +1,3 @@
 $(function(){	
-	buildgame(game);
+	buildGame(game);
 });
