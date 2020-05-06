@@ -41,6 +41,12 @@ body{
     position: relative;
     float: left;
 }
+.piece.hidden {
+    display: none; !important;
+    visibility: hidden; !important;
+    width: 0; !important
+    height: 0; !important
+}
 .piece.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }

@@ -142,12 +142,11 @@
     	}
     }
 
-    function refreshGameBoard(){    	
-    	var whitepieces = extractColorPiecesFromBoard('.whitepiece');
-    	var blackpieces = extractColorPiecesFromBoard('.blackpiece');
-    	var whiteplayer = updatePlayerPieces('white', whitepieces);
-    	var blackplayer = updatePlayerPieces('black', blackpieces);
-    	resizeAllPieces();    	
+    function refreshGameBoard(){     	
+    	updatePlayerPieces('white');
+    	updatePlayerPieces('black');
+    	resizeAllPieces();
+    	console.log(game);
     }
 
     function extractCoors(box){
@@ -159,7 +158,8 @@
     	return {};
     }
 
-    function updatePlayerPieces(colorside, pieces) {
+    function updatePlayerPieces(colorside) {
+    	var pieces = extractColorPiecesFromBoard('.' + colorside + 'piece');
     	$.each(game.board.players, function (i, player) {    		
     		if (player.side == colorside) {    			
     			player.pieces = pieces;
@@ -170,9 +170,8 @@
     function extractColorPiecesFromBoard(colorside) {
     	var coors = [];
     	$(colorside).each(function (i, v) {
-    		var l = extractCoors($(v).parent());    		
-    		coors.push(l);
-    	});    	
+    		coors.push(extractCoors($(v).parent()));
+    	});
     	return coors;
     }
 
@@ -194,10 +193,16 @@
     			return isAcceptableDrop(el, target, source, sibling);    			
     		}
     	}).on('drop', function (el, target, source, sibling){
-    		refreshGameBoard();
+    		$(el).removeClass('hidden');
+    		refreshGameBoard();    		
     	}).on('shadow', function (el, container, source){
-    		refreshGameBoard();
-    	}).on('dragend', function (el){    		
+    		var $el = $(el);
+    		$el.addClass('hidden');
+    		if (isAcceptableDrop(el, container, source, [])){
+    			$el.removeClass('hidden');
+    		};    		
+    	}).on('dragend', function (el){
+    		$(el).removeClass('hidden');
     		refreshGameBoard();
     	});
     }
