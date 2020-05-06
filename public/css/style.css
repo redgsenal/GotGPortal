@@ -35,6 +35,12 @@ body{
     background-position: center;
     background-size: cover;
 }
+.piece.small {
+    background-size: 30px;
+    width: 50%;
+    position: relative;
+    float: left;
+}
 .piece.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }

@@ -77,9 +77,8 @@
 	    }
 	};
 
-	function isSamePieceDropBox(el, target, source){
-		var color = $(el).hasClass('whitepiece') ? '.piece.whitepiece' : '.piece.blackpiece';		
-		var $t = $(target);		
+	function hasSamePieceInBox(el, target, source){
+		var $t = $(target);
 		var b = $t.find('.piece.blackpiece').length;
 		var w = $t.find('.piece.whitepiece').length;		
 		var r = (($t.find('.piece.blackpiece').length > 1) ||
@@ -88,10 +87,11 @@
 	}
 
 	function isAcceptableDrop(el, target, source, sibling){
-		if (isSamePieceDropBox(el, target, source)){
-			console.log('fail here');
+		if (hasSamePieceInBox(el, target, source)){			
     		return false;
     	}
+
+    	// restrict 1 box only to the left, right, top, bottom
     	var $src = $(source);
     	var $tgt = $(target);
     	var sid = $src.attr('id');
@@ -129,23 +129,76 @@
     	});
     }
 
+    function resizePieces (container){
+    	var $t = $(container);
+    	var p = $t.find('.piece');    	
+    	p.each(function (i, v){
+    		$(v).removeClass('small');
+    	});
+    	if (p.length > 1) {
+    		p.each(function (i, v){
+    			$(v).addClass('small');
+    		});
+    	}
+    }
+
+    function refreshGameBoard(){    	
+    	var whitepieces = extractColorPiecesFromBoard('.whitepiece');
+    	var blackpieces = extractColorPiecesFromBoard('.blackpiece');
+    	var whiteplayer = updatePlayerPieces('white', whitepieces);
+    	var blackplayer = updatePlayerPieces('black', blackpieces);
+    	resizeAllPieces();    	
+    }
+
+    function extractCoors(box){
+    	var id = $(box).attr('id');
+    	if (id) {
+    		var coors = id.replace('cell-', '').trim().split('-');    		
+    		return { location: { x: coors[0], y: coors[1] } };
+    	}
+    	return {};
+    }
+
+    function updatePlayerPieces(colorside, pieces) {
+    	$.each(game.board.players, function (i, player) {    		
+    		if (player.side == colorside) {    			
+    			player.pieces = pieces;
+    		}
+    	});
+    }
+
+    function extractColorPiecesFromBoard(colorside) {
+    	var coors = [];
+    	$(colorside).each(function (i, v) {
+    		var l = extractCoors($(v).parent());    		
+    		coors.push(l);
+    	});    	
+    	return coors;
+    }
+
+    function resizeAllPieces(){
+		$('.box').each(function(i, v){
+    		resizePieces($(v));	
+    	});
+    }
+
     function enableDragBoxes(){
     	var containers = [];
-    	$('.box').each(function (i, v){    		
+    	$('.box').each(function (i, v){
     		containers.push(v);
-    	});    	
+    	});
     	dragula(containers,{
     		revertOnSpill: true,
+    		removeOnSpill: false,
     		accepts: function (el, target, source, sibling){
-    			var r = isAcceptableDrop(el, target, source, sibling);    			
-    			if (!r){
-    				var $src = $(source);
-    				var $p = $src.find('.piece');
-    				var color = $p.hasClass('whitepiece') ? 'white' : 'black';
-    				showError('Invalid move.', color);
-    			}
-    			return r;
+    			return isAcceptableDrop(el, target, source, sibling);    			
     		}
+    	}).on('drop', function (el, target, source, sibling){
+    		refreshGameBoard();
+    	}).on('shadow', function (el, container, source){
+    		refreshGameBoard();
+    	}).on('dragend', function (el){    		
+    		refreshGameBoard();
     	});
     }
 
@@ -155,5 +208,5 @@
 
     function buildGame(game) {
     	enableDragBoxes();
-    	buildPlayers(game.board.players);
+    	buildPlayers(game.board.players);    	
     };
