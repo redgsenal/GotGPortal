@@ -50,11 +50,41 @@ body{
 .piece.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }
+.piece.whitepiece.flag{
+    background-image: url('../images/whitepiece-flag.png');
+}
+.piece.whitepiece.private{
+    background-image: url('../images/whitepiece-private.png');
+}
+.piece.whitepiece.spy{
+    background-image: url('../images/whitepiece-spy.png');
+}
+.piece.whitepiece.general{
+    background-image: url('../images/whitepiece-general.png');
+}
+.piece.whitepiece.sergeant{
+    background-image: url('../images/whitepiece-sergeant.png');
+}
 .piece.whitepiece:hover{
 	background-image: url('../images/whitepiece-select.png');
 }
 .piece.blackpiece{
 	background-image: url('../images/blackpiece.png');
+}
+.piece.blackpiece.flag{
+    background-image: url('../images/blackpiece-flag.png');
+}
+.piece.blackpiece.private{
+    background-image: url('../images/blackpiece-private.png');
+}
+.piece.blackpiece.spy{
+    background-image: url('../images/blackpiece-spy.png');
+}
+.piece.blackpiece.general{
+    background-image: url('../images/blackpiece-general.png');
+}
+.piece.blackpiece.sergeant{
+    background-image: url('../images/whitepiece-sergeant.png');
 }
 .piece.blackpiece:hover{
 	background-image: url('../images/blackpiece-select.png');

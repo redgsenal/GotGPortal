@@ -6,33 +6,45 @@
 	    		,pieces: 
 	    		[
 	    			{
+	    				rank: 'general',
 		    			location: {
 		    				x: 2,
 		    				y: 3
 		    			}
 	    			},
 	    			{
+	    				rank: 'flag',
 	    				location: {
 	    					x: 2,
 	    					y: 2
 	    				}
 	    			},
 	    			{
+	    				rank: 'private',
 	    				location: {
 	    					x: 4,
 	    					y: 2
 	    				}
 	    			},
 	    			{
+	    				rank: 'spy',
 	    				location: {
 	    					x: 5,
 	    					y: 2
 	    				}
 	    			},
 	    			{
+	    				rank: 'sergeant',
 	    				location: {
 	    					x: 6,
 	    					y: 1
+	    				}
+	    			},
+	    			{
+	    				rank: 'spy',
+	    				location: {
+	    					x: 8,
+	    					y: 3
 	    				}
 	    			}
 	    		]
@@ -43,33 +55,45 @@
 	    		,pieces: 
 	    		[
 	    			{
+	    				rank: 'flag',
 		    			location: {
 		    				x: 5,
 		    				y: 4
 		    			}
 	    			}
 	    			,{
+	    				rank: 'private',
 		    			location: {
 		    				x: 5,
 		    				y: 5
 		    			}
 	    			}
 	    			,{
+	    				rank: 'general',
 		    			location: {
 		    				x: 5,
 		    				y: 6
 		    			}
 	    			}
 	    			,{
+	    				rank: 'private',
 	    				location: {
 	    					x: 6,
 	    					y: 6
 	    				}
 	    			}
-	    			,{
+	    			,{	
+	    				rank: 'spy',
 		    			location: {
 		    				x: 8,
 		    				y: 6
+		    			}
+	    			}
+	    			,{	
+	    				rank: 'sergeant',
+		    			location: {
+		    				x: 2,
+		    				y: 7
 		    			}
 	    			}
 	    		]
@@ -116,7 +140,7 @@
     		var box = "#cell-" + v.location.x + "-" + v.location.y;    		
     		var $box = $(box);
     		if ($box.length){
-    			$box.prepend($("<div class='piece draggable " + colorside + "'></div>"));    			 			
+    			$box.prepend($("<div class='piece draggable " + colorside + " " + v.rank + "'></div>"));    			 			
     		}
     	});
     }
