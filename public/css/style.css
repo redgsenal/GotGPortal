@@ -84,7 +84,7 @@ body{
     background-image: url('../images/blackpiece-general.png');
 }
 .piece.blackpiece.sergeant{
-    background-image: url('../images/whitepiece-sergeant.png');
+    background-image: url('../images/blackpiece-sergeant.png');
 }
 .piece.blackpiece:hover{
 	background-image: url('../images/blackpiece-select.png');
