@@ -100,6 +100,9 @@ class SoldierPiece {
 	}
 
 	challengePiece(piece) {
+		if (this.isSameLocation(piece)){
+			throw "Invalid challenge pieces; not same location";
+		}
 		if (!piece){
 			this.location = piece.location;
 			piece.eliminatePiece();
