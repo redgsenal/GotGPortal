@@ -241,7 +241,97 @@ class Soldier5StarGeneralPiece extends SoldierPiece {
 	}
 }
 
-let emptyPiece = new EmptyPiece({x: 10, y: 10}, ColorPiece.WHITE);
+class Board {	
+	constructor(){
+		this.MAX_X = 9;
+		this.MAX_Y = 8;
+		this.MIN_X = 1;
+		this.MIN_Y = 1;
+		this.whitePieces = this.generatePieces(ColorPiece.WHITE);
+		this.blackPieces = this.generatePieces(ColorPiece.BLACK);
+	}
+
+	randomNumberMinMax(min, max){
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+
+	randomInitialLocation(colorside){
+		let rx = this.randomNumberMinMax(1, this.MAX_X);
+		let miny = 1;
+		let maxy = 3;
+		if (colorside == ColorPiece.BLACK) {
+			miny = 6;
+			maxy = this.MAX_Y;
+		}
+		let ry = this.randomNumberMinMax(miny, maxy);
+		return {x: rx, y: ry};
+	}
+
+
+	isNewLocationValid(pieces, loc){
+		let rv = true;
+		pieces.forEach(function (v, i){
+			if (v.pieceLocation.x == loc.x && v.pieceLocation.y == loc.y){
+				//console.log("found match!");
+				//console.log(v.pieceLocation);
+				rv = false;
+			}
+		});		
+		//console.log(loc);
+		//console.log("result ", rv);
+		return rv;
+	}
+
+	generateInitialPiecesLocation(pieces, colorside) {		
+		let $b = this;
+		pieces.forEach(function (v, i){			
+			let vl = false;
+			while(!vl) {
+				let l = $b.randomInitialLocation(colorside);
+				vl = $b.isNewLocationValid(pieces, l);
+				if (vl){
+					v.pieceLocation = l;
+				}				
+			}
+		});
+	}
+
+	generatePieces(colorside) {
+		let pieces = [];
+		let privatePieces = [];
+		let spyPieces = [];
+		// 6 privates
+		while (privatePieces.length < 6) {
+			privatePieces.push(new SoldierPrivatePiece({x: 0, y: 0}, colorside));
+		}
+		pieces = pieces.concat(privatePieces);
+		// 6 privates
+		while (spyPieces.length < 2) {				
+			spyPieces.push(new SoldierSpyPiece({x: 0, y: 0}, colorside));
+		}
+		pieces = pieces.concat(spyPieces);
+		pieces.push(new SoldierFlagPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierSergeantPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierSecondLieutenantPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierFirstLieutenantPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierCaptainPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierMajorPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierColonelPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierLieutenantColonelPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierBrigadierGeneralPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierMajorGeneralPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierLieutenantGeneralPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierGeneralPiece({x: 0, y: 0}, colorside));
+		pieces.push(new Soldier5StarGeneralPiece({x: 0, y: 0}, colorside));
+		this.generateInitialPiecesLocation(pieces, colorside);
+		return pieces;
+	}
+}
+
+let board = new Board();
+
+
+/*let emptyPiece = new EmptyPiece({x: 10, y: 10}, ColorPiece.WHITE);
 let privateSoldier = new SoldierPrivatePiece({x: 1, y: 5}, ColorPiece.BLACK);
 let privateSoldier2 = new SoldierPrivatePiece({x: 1, y: 5}, ColorPiece.BLACK);
 let spySoldier = new SoldierSpyPiece({x: 1, y: 5}, ColorPiece.WHITE);
@@ -255,7 +345,7 @@ console.log(spySoldier instanceof SoldierPiece);
 console.log(spySoldier instanceof EmptyPiece);
 //privateSoldier.move({x: 10, y: 9});
 privateSoldier2.move({x: 2, y: 8});
-console.log(privateSoldier2);
+console.log(privateSoldier2);*/
 
 //console.log(privateSoldier2.isSameLocation({x: 1, y: 5}));
 //console.log(privateSoldier2.isSamePieceLocation(spySoldier));
