@@ -1,3 +1,4 @@
 $(function(){	
-	buildGame(game);
+	//buildGame(game);
+	let gotg = new GotG();
 });

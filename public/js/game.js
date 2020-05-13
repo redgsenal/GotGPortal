@@ -3,6 +3,7 @@ const ColorPiece = {
 	WHITE: 'white',
 	BLACK: 'black'
 }
+const neutralLocation = {x: 0, y: 0};
 
 class SoldierPiece {	
 	constructor(rank, value, clsrank, eliminated, location, colorside) {
@@ -52,6 +53,12 @@ class SoldierPiece {
 
 	set pieceColor(v){
 		this.colorside = v;
+	}
+
+	id(){
+		let x = this.location.x;
+		let y = this.location.y;
+		return "cell-" + x + "-" + y;
 	}
 	
 	eliminatePiece(){
@@ -247,9 +254,143 @@ class Board {
 		this.MAX_Y = 8;
 		this.MIN_X = 1;
 		this.MIN_Y = 1;
+		this.enableDragBoxes();
 		this.whitePieces = this.generatePieces(ColorPiece.WHITE);
 		this.blackPieces = this.generatePieces(ColorPiece.BLACK);
+		this.buildBoardLayout();
 	}
+
+	get boardPieces(){
+		return this.whitePieces.concat(this.blackPieces);
+	}
+
+	get whiteSoldierPieces(){
+		return this.whitePieces;
+	}
+
+	get blackSoldierPieces(){
+		return this.blackPieces;
+	}
+
+	buildBoardLayout(){
+		const pieces = this.whitePieces.concat(this.blackPieces);		
+		pieces.forEach(function(v, i){
+			const $box = $("#" + v.id());			
+    		if ($box.length == 1){
+    			$box.prepend($("<div class='piece draggable " + v.colorside + "piece " + v.clsrank + "'></div>"));
+    		}
+		});
+	}
+
+	refreshGameBoard(){
+		this.resizeAllPieces();
+		this.boardPieces.forEach(function (v, i){
+			//console.log(v.pieceLocation);
+		});
+	}
+
+	hasSamePieceInBox(el, target, source){
+		const $t = $(target);
+		const b = $t.find('.piece.blackpiece').length;
+		const w = $t.find('.piece.whitepiece').length;		
+		const r = (($t.find('.piece.blackpiece').length > 1) ||
+			($t.find('.piece.whitepiece').length > 1));
+		return r;
+	}
+
+	resizeAllPieces(){
+		const $this = this;
+		$('.box').each(function(i, v){
+    		$this.resizePieces($(v));	
+    	});
+    }
+
+	resizePieces (container){
+    	const $t = $(container);
+    	const p = $t.find('.piece');    	
+    	p.each(function (i, v){
+    		$(v).removeClass('small');
+    	});
+    	if (p.length > 1) {
+    		p.each(function (i, v){
+    			$(v).addClass('small');
+    		});
+    	}
+    }
+
+	isAcceptableDrop(el, target, source, sibling){		
+		if (this.hasSamePieceInBox(el, target, source)){			
+    		return false;
+    	}
+
+    	// restrict 1 box only to the left, right, top, bottom
+    	const $src = $(source);
+    	const $tgt = $(target);
+    	const sid = $src.attr('id');
+    	const tid = $tgt.attr('id');
+    	const scoor = sid.replace('cell-', '').split('-');
+    	const x = parseInt(scoor[0]);
+		const y = parseInt(scoor[1]);
+		const tcoors = [
+			'cell-' + x + '-'  + eval(y + 1)
+			,'cell-' + x + '-'  + eval(y - 1)
+			,'cell-' + eval(x - 1) + '-'  + y
+			,'cell-' + eval(x + 1) + '-'  + y
+		];    			
+    	return tcoors.includes(tid);
+	}
+
+	pieceAtLocation(location){
+		let piece = new EmptyPiece(location, ColorPiece.NONE); 
+		this.boardPieces.forEach(function(v, i){
+			if (v.location.x == location.x && v.location.y == location.y){				
+				piece = v;
+			}
+		});
+		return piece;
+	}
+
+	movePiece(el, target, source){
+		const $t = $(target);
+		const $s = $(source);
+		const $p = $(el);
+		const sx = $s.data('x');
+		const sy = $s.data('y');
+		const tx = $t.data('x');
+		const ty = $t.data('y');
+		const piece = this.pieceAtLocation({x: sx, y: sy});
+		if (!(piece instanceof EmptyPiece)){			
+			piece.pieceLocation = {x: tx, y: ty};
+		}
+	}
+
+	enableDragBoxes(){
+    	const containers = [];
+    	const $this = this;
+    	$('.box').each(function (i, v){
+    		containers.push(v);
+    	});
+    	dragula(containers,{
+    		revertOnSpill: true,
+    		removeOnSpill: false,
+    		accepts: function (el, target, source, sibling){
+    			return $this.isAcceptableDrop(el, target, source, sibling);    			
+    		}
+    	}).on('drop', function (el, target, source, sibling){
+    		$(el).removeClass('hidden');
+    		$this.movePiece(el, target, source);
+    		$this.refreshGameBoard();
+    	}).on('shadow', function (el, container, source){
+    		let $el = $(el);
+    		$el.addClass('hidden');
+    		if ($this.isAcceptableDrop(el, container, source, [])){
+    			$el.removeClass('hidden');
+    		};    		
+    	}).on('dragend', function (el){
+    		$(el).removeClass('hidden');
+    		$this.refreshGameBoard();
+    	});
+    }
 
 	randomNumberMinMax(min, max){
 		return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -268,29 +409,25 @@ class Board {
 	}
 
 
-	isNewLocationValid(pieces, loc){
+	isNewLocationValid(pieces, location){
 		let rv = true;
 		pieces.forEach(function (v, i){
-			if (v.pieceLocation.x == loc.x && v.pieceLocation.y == loc.y){
-				//console.log("found match!");
-				//console.log(v.pieceLocation);
+			if (v.pieceLocation.x == location.x && v.pieceLocation.y == location.y) {
 				rv = false;
 			}
-		});		
-		//console.log(loc);
-		//console.log("result ", rv);
+		});
 		return rv;
 	}
 
 	generateInitialPiecesLocation(pieces, colorside) {		
-		let $b = this;
+		const $this = this;
 		pieces.forEach(function (v, i){			
 			let vl = false;
 			while(!vl) {
-				let l = $b.randomInitialLocation(colorside);
-				vl = $b.isNewLocationValid(pieces, l);
+				const location = $this.randomInitialLocation(colorside);
+				vl = $this.isNewLocationValid(pieces, location);
 				if (vl){
-					v.pieceLocation = l;
+					v.pieceLocation = location;
 				}				
 			}
 		});
@@ -298,38 +435,41 @@ class Board {
 
 	generatePieces(colorside) {
 		let pieces = [];
-		let privatePieces = [];
-		let spyPieces = [];
+		const privatePieces = [];
+		const spyPieces = [];
 		// 6 privates
 		while (privatePieces.length < 6) {
-			privatePieces.push(new SoldierPrivatePiece({x: 0, y: 0}, colorside));
+			privatePieces.push(new SoldierPrivatePiece(neutralLocation, colorside));
 		}
 		pieces = pieces.concat(privatePieces);
 		// 6 privates
 		while (spyPieces.length < 2) {				
-			spyPieces.push(new SoldierSpyPiece({x: 0, y: 0}, colorside));
+			spyPieces.push(new SoldierSpyPiece(neutralLocation, colorside));
 		}
 		pieces = pieces.concat(spyPieces);
-		pieces.push(new SoldierFlagPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierSergeantPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierSecondLieutenantPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierFirstLieutenantPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierCaptainPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierMajorPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierColonelPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierLieutenantColonelPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierBrigadierGeneralPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierMajorGeneralPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierLieutenantGeneralPiece({x: 0, y: 0}, colorside));
-		pieces.push(new SoldierGeneralPiece({x: 0, y: 0}, colorside));
-		pieces.push(new Soldier5StarGeneralPiece({x: 0, y: 0}, colorside));
+		pieces.push(new SoldierFlagPiece(neutralLocation, colorside));
+		pieces.push(new SoldierSergeantPiece(neutralLocation, colorside));
+		pieces.push(new SoldierSecondLieutenantPiece(neutralLocation, colorside));
+		pieces.push(new SoldierFirstLieutenantPiece(neutralLocation, colorside));
+		pieces.push(new SoldierCaptainPiece(neutralLocation, colorside));
+		pieces.push(new SoldierMajorPiece(neutralLocation, colorside));
+		pieces.push(new SoldierColonelPiece(neutralLocation, colorside));
+		pieces.push(new SoldierLieutenantColonelPiece(neutralLocation, colorside));
+		pieces.push(new SoldierBrigadierGeneralPiece(neutralLocation, colorside));
+		pieces.push(new SoldierMajorGeneralPiece(neutralLocation, colorside));
+		pieces.push(new SoldierLieutenantGeneralPiece(neutralLocation, colorside));
+		pieces.push(new SoldierGeneralPiece(neutralLocation, colorside));
+		pieces.push(new Soldier5StarGeneralPiece(neutralLocation, colorside));
 		this.generateInitialPiecesLocation(pieces, colorside);
 		return pieces;
 	}
 }
 
-let board = new Board();
-
+class GotG {
+	constructor(){
+		let board = new Board(); 
+	}
+}
 
 /*let emptyPiece = new EmptyPiece({x: 10, y: 10}, ColorPiece.WHITE);
 let privateSoldier = new SoldierPrivatePiece({x: 1, y: 5}, ColorPiece.BLACK);

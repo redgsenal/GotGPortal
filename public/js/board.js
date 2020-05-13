@@ -140,7 +140,7 @@
     		var box = "#cell-" + v.location.x + "-" + v.location.y;    		
     		var $box = $(box);
     		if ($box.length){
-    			$box.prepend($("<div class='piece draggable " + colorside + " " + v.rank + "'></div>"));    			 			
+    			$box.prepend($("<div class='piece draggable " + colorside + " " + v.rank + "'></div>"));
     		}
     	});
     }
