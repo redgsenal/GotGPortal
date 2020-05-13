@@ -13,6 +13,7 @@ class SoldierPiece {
 		this.location = location;
 		this.eliminated = eliminated;
 		this.colorside = colorside;
+		this.drawPieceItem = "<div class='piece draggable " + this.colorside + "piece " + this.clsrank + "'></div>";
 	}
 
 	get rankName(){
@@ -53,6 +54,10 @@ class SoldierPiece {
 
 	set pieceColor(v){
 		this.colorside = v;
+	}
+
+	get drawPiece(){
+		return this.drawPieceItem;
 	}
 
 	id(){
@@ -272,21 +277,18 @@ class Board {
 		return this.blackPieces;
 	}
 
-	buildBoardLayout(){
-		const pieces = this.whitePieces.concat(this.blackPieces);		
-		pieces.forEach(function(v, i){
+	buildBoardLayout(){		
+		this.boardPieces.forEach(function(v, i){
 			const $box = $("#" + v.id());			
     		if ($box.length == 1){
-    			$box.prepend($("<div class='piece draggable " + v.colorside + "piece " + v.clsrank + "'></div>"));
+    			$box.prepend(v.drawPiece);
     		}
 		});
 	}
 
 	refreshGameBoard(){
 		this.resizeAllPieces();
-		this.boardPieces.forEach(function (v, i){
-			//console.log(v.pieceLocation);
-		});
+		console.log(this.boardPieces);
 	}
 
 	hasSamePieceInBox(el, target, source){
@@ -305,7 +307,7 @@ class Board {
     	});
     }
 
-	resizePieces (container){
+	resizePieces(container){
     	const $t = $(container);
     	const p = $t.find('.piece');    	
     	p.each(function (i, v){
