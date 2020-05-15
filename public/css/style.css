@@ -47,9 +47,24 @@ body{
     width: 0; !important
     height: 0; !important
 }
+.piece label{
+    margin-top: 10px;
+    font-weight: bold;
+    display: inline-block;
+    font-size: 9px;
+    line-height: 12px;
+    width: 40px;
+    text-align: center;
+    vertical-align: middle;
+    height: 25px;
+}
 .piece.whitepiece{
 	background-image: url('../images/whitepiece.png');
 }
+.piece.whitepiece label{
+    color: #191919;
+} 
+
 .piece.whitepiece.flag{
     background-image: url('../images/whitepiece-flag.png');
 }
@@ -70,6 +85,9 @@ body{
 }
 .piece.blackpiece{
 	background-image: url('../images/blackpiece.png');
+}
+.piece.blackpiece label{
+    color: #f0f0f0;
 }
 .piece.blackpiece.flag{
     background-image: url('../images/blackpiece-flag.png');

@@ -13,7 +13,7 @@ class SoldierPiece {
 		this.location = location;
 		this.eliminated = eliminated;
 		this.colorside = colorside;
-		this.drawPieceItem = "<div class='piece draggable " + this.colorside + "piece " + this.clsrank + "'></div>";
+		this.drawPieceItem = "<div class='piece draggable " + this.colorside + "piece " + this.clsrank + "'><label>"+ this.rank + "</label></div>";
 	}
 
 	get rankName(){
@@ -61,14 +61,22 @@ class SoldierPiece {
 	}
 
 	id(){
-		let x = this.location.x;
-		let y = this.location.y;
-		return "cell-" + x + "-" + y;
+		return "cell-" + this.location.x + "-" + this.location.y;
 	}
 	
 	eliminatePiece(){
-		this.location = {x: 0, y: 0};
+		this.drawPieceItem = "";		
+		//const box = $("#cell-" + this.location.x + "-" + this.location.y);
+		//const piece = $(this.drawPieceItem);
+		//const cns = piece.attr('class').replace(/\s/g, ".");
+		//const t = box.find(cns);
+		//console.log('box ', box);
+		//console.log('eliminate this ', piece);
+		//console.log('cns ', cns);
+		//console.log('t ', t);
 		this.eliminated = true;
+		//this.drawPieceItem = "";
+		this.location = {x: 0, y: 0};		
 	}
 
 	isEliminated(){
@@ -122,16 +130,22 @@ class SoldierPiece {
 		}
 		// TODO need to confirm
 		// the piece that challenges the piece of the same current location wins
+		console.log('this value ', this.rankName);
+		console.log('this rank ', this.rankValue);
+
+		console.log('piece value ', piece.rankName);
+		console.log('piece value ', piece.rankValue);
 		if (piece.rankValue == this.rankValue){
 			this.location = piece.location;
 			piece.eliminatePiece();
 			return this;
 		}
 		if (piece.rankValue > this.rankValue){
-			piece.location = this.location;
+			console.log('piece wins ', piece.rankName);			
 			this.eliminatePiece();
 			return piece;
 		} else {
+			console.log('this wins ', this.rankName);
 			this.location = piece.location;
 			piece.eliminatePiece();
 			return this;
@@ -157,10 +171,13 @@ class SoldierPrivatePiece extends SoldierPiece {
 	}
 
 	challengePiece(piece){
+		let r = piece;
 		if (piece instanceof SoldierSpyPiece){
+			this.location = piece.location;
+			piece.eliminatePiece();
 			return this;
 		}
-		return piece;
+		return super.challengePiece(piece);
 	}	
 }
 
@@ -171,13 +188,10 @@ class SoldierSpyPiece extends SoldierPiece {
 
 	challengePiece(piece){
 		if (piece instanceof SoldierPrivatePiece){
-			piece.location = this.location;
 			this.eliminatePiece();
 			return piece;
 		}
-		this.location = piece.location;
-		piece.eliminatePiece();
-		return this;
+		return super.challengePiece(piece);
 	}
 }
 
@@ -262,6 +276,8 @@ class Board {
 		this.enableDragBoxes();
 		this.whitePieces = this.generatePieces(ColorPiece.WHITE);
 		this.blackPieces = this.generatePieces(ColorPiece.BLACK);
+		this.whitePieces.push(new SoldierSergeantPiece({x: 5, y: 4}, ColorPiece.WHITE));
+		this.whitePieces.push(new SoldierPrivatePiece({x: 5, y: 5}, ColorPiece.BLACK));
 		this.buildBoardLayout();
 	}
 
@@ -281,14 +297,28 @@ class Board {
 		this.boardPieces.forEach(function(v, i){
 			const $box = $("#" + v.id());			
     		if ($box.length == 1){
-    			$box.prepend(v.drawPiece);
+    			$box.empty();
+    			if (!v.isEliminated()){
+    				$box.prepend(v.drawPiece);
+    			}
     		}
 		});
 	}
 
 	refreshGameBoard(){
+		/*this.boardPieces.forEach(function(v, i){
+			const $box = $("#" + v.id());			
+    		if ($box.length == 1){
+    			$box.empty();
+    			console.log($box);
+    			if (!v.isEliminated()){
+    				$box.prepend(v.drawPiece);	
+    			}    			
+    		}
+		});*/
+		this.buildBoardLayout();
 		this.resizeAllPieces();
-		console.log(this.boardPieces);
+		//console.log(this.boardPieces);
 	}
 
 	hasSamePieceInBox(el, target, source){
@@ -309,12 +339,12 @@ class Board {
 
 	resizePieces(container){
     	const $t = $(container);
-    	const p = $t.find('.piece');    	
-    	p.each(function (i, v){
+    	const piece = $t.find('.piece');    	
+    	piece.each(function (i, v){
     		$(v).removeClass('small');
     	});
-    	if (p.length > 1) {
-    		p.each(function (i, v){
+    	if (piece.length > 1) {
+    		piece.each(function (i, v){
     			$(v).addClass('small');
     		});
     	}
@@ -360,10 +390,15 @@ class Board {
 		const sy = $s.data('y');
 		const tx = $t.data('x');
 		const ty = $t.data('y');
-		const piece = this.pieceAtLocation({x: sx, y: sy});
-		if (!(piece instanceof EmptyPiece)){			
-			piece.pieceLocation = {x: tx, y: ty};
-		}
+		const sourcePiece = this.pieceAtLocation({x: sx, y: sy});
+		const targetPiece = this.pieceAtLocation({x: tx, y: ty});
+		//console.log('sourcePiece ', sourcePiece);
+		//console.log('targetPiece ', targetPiece);
+		const winnerPiece = sourcePiece.challengePiece(targetPiece);
+		console.log('winnerPiece ', winnerPiece);
+		//if (!(sourcePiece instanceof EmptyPiece)){
+		//	piece.pieceLocation = {x: tx, y: ty};
+		//}
 	}
 
 	enableDragBoxes(){
